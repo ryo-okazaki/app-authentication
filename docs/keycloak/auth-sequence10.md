@@ -1,0 +1,53 @@
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend as Frontend<br/>(todo-frontend-client)
+    participant Backend as Backend<br/>(todo-backend-client)
+    participant Keycloak
+
+    rect rgb(240, 240, 240)
+        Note over Backend,Keycloak: 初期化フェーズ（アプリ起動時1回のみ）
+        Backend->>Keycloak: GET /realms/{realm}/protocol/openid-connect/certs
+        Keycloak->>Backend: 公開鍵セット (JWKS)
+        Note over Backend: 公開鍵を24時間キャッシュ
+    end
+
+    rect rgb(255, 250, 240)
+        Note over User,Keycloak: 認証フェーズ
+        User->>Frontend: 1. アプリにアクセス
+        Frontend->>Frontend: 2. 未認証を検知
+        Frontend->>Keycloak: 3. リダイレクト<br/>GET /auth?client_id=todo-frontend-client
+        Keycloak->>User: 4. ログイン画面表示
+        User->>Keycloak: 5. 認証情報入力
+        Keycloak->>Keycloak: 6. 認証 & トークン生成<br/>aud: ["todo-backend-client"]<br/>(Audience Mapperにより)
+        Keycloak->>Frontend: 7. リダイレクト + Authorization Code
+        Frontend->>Keycloak: 8. POST /token (code交換)
+        Keycloak->>Frontend: 9. Access Token返却
+        Frontend->>Frontend: 10. トークンを保存<br/>(SessionStorage/Cookie)
+    end
+
+    rect rgb(240, 255, 240)
+        Note over Frontend,Backend: API呼び出しフェーズ（各リクエストごと）
+        User->>Frontend: 11. データ取得操作
+        Frontend->>Backend: 12. GET /api/todos<br/>Authorization: Bearer {token}
+        
+        Note over Backend: 13. トークン検証（ローカル）<br/>━━━━━━━━━━━━━━━━<br/>a. JWTヘッダー解析<br/>b. 署名検証（キャッシュした公開鍵）<br/>c. issuer検証<br/>d. audience検証<br/>   → "todo-backend-client"が含まれるか<br/>e. 有効期限検証<br/>━━━━━━━━━━━━━━━━
+        
+        alt トークン有効
+            Backend->>Backend: 14. ビジネスロジック実行
+            Backend->>Frontend: 15. 200 OK + データ
+            Frontend->>User: 16. データ表示
+        else トークン無効
+            Backend->>Frontend: 17. 403 Forbidden
+            Frontend->>User: 18. エラー表示
+        end
+    end
+
+    rect rgb(255, 240, 240)
+        Note over Frontend,Keycloak: トークンリフレッシュフェーズ（有効期限切れ時）
+        Frontend->>Frontend: 19. Access Token期限切れ検知
+        Frontend->>Keycloak: 20. POST /token<br/>grant_type=refresh_token
+        Keycloak->>Frontend: 21. 新しいAccess Token
+        Frontend->>Backend: 22. API再実行（新トークン）
+    end
+```
