@@ -22,3 +22,6 @@ indent_size = 2
 
 [*.sample]
 indent_size = 2
+
+[*.{tf,tfvars}]
+indent_size = 2
