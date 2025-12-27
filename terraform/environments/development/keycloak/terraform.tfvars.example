@@ -1,0 +1,26 @@
+# =============================================================================
+# Example terraform.tfvars
+# Copy this file to terraform.tfvars and fill in the values
+# =============================================================================
+
+# Provider settings
+keycloak_admin_client_id     = "terraform"
+keycloak_admin_client_secret = "your-terraform-client-secret"
+keycloak_url                 = "http://localhost:8080"
+reaml_for_auth               = "master"
+
+# Realm settings
+realm_name   = "microservice-app"
+
+# SMTP settings
+smtp_host = "mailhog"
+smtp_port = "1025"
+smtp_from = "noreply@example.com"
+
+# Client settings
+todo_backend_client_secret = "your-backend-client-secret"
+todo_frontend_client_url   = "http://localhost:3000"
+
+# Google IdP settings
+google_idp_client_id     = "your-google-oauth-client-id.apps.googleusercontent.com"
+google_idp_client_secret = "your-google-oauth-client-secret"
