@@ -58,7 +58,11 @@ resource "aws_iam_policy" "secrets_access" {
     Statement = [{
       Effect   = "Allow"
       Action   = "secretsmanager:GetSecretValue"
-      Resource = [var.db_password_arn, var.admin_password_arn]
+      Resource = [
+        var.db_password_arn,
+        var.admin_password_arn,
+        aws_secretsmanager_secret.terraform_client_secret.arn
+      ]
     }]
   })
 }

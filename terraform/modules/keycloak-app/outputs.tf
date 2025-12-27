@@ -17,3 +17,11 @@ output "ecr_repository_url" {
 output "ecs_cluster_name" {
   value = aws_ecs_cluster.this.name
 }
+
+output "terraform_client_secret_arn" {
+  value = aws_secretsmanager_secret.terraform_client_secret.arn
+}
+
+output "terraform_client_secret_name" {
+  value = aws_secretsmanager_secret.terraform_client_secret.name
+}

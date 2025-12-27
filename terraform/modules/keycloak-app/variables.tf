@@ -30,6 +30,10 @@ variable "acm_certificate_arn" {
   type = string
 }
 
+variable "terraform_client_secret_arn" {
+  type = string
+}
+
 variable "domain_name" {
   type = string
 }
