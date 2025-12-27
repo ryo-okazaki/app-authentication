@@ -61,7 +61,8 @@ resource "aws_iam_policy" "secrets_access" {
       Resource = [
         var.db_password_arn,
         var.admin_password_arn,
-        aws_secretsmanager_secret.terraform_client_secret.arn
+        aws_secretsmanager_secret.terraform_client_secret.arn,
+        var.ses_smtp_credentials_secret_arn
       ]
     }]
   })
@@ -248,13 +249,23 @@ resource "aws_ecs_task_definition" "this" {
 
         # インポートの上書き戦略
         { name = "KC_SPI_IMPORT_IMPORTER_DIR", value = "/opt/keycloak/data/import" },
-        { name = "KC_SPI_IMPORT_IMPORTER_STRATEGY", value = "IGNORE_EXISTING" }
+        { name = "KC_SPI_IMPORT_IMPORTER_STRATEGY", value = "IGNORE_EXISTING" },
+
+        { name = "KC_SPI_EMAIL_SMTP_HOST", value = var.ses_smtp_endpoint },
+        { name = "KC_SPI_EMAIL_SMTP_PORT", value = tostring(var.ses_smtp_port) },
+        { name = "KC_SPI_EMAIL_SMTP_FROM", value = var.ses_from_email },
+        { name = "KC_SPI_EMAIL_SMTP_FROM_DISPLAY_NAME", value = var.ses_from_display_name },
+        { name = "KC_SPI_EMAIL_SMTP_STARTTLS", value = "true" },
+        { name = "KC_SPI_EMAIL_SMTP_SSL", value = "false" },
+        { name = "KC_SPI_EMAIL_SMTP_AUTH", value = "true" },
       ]
       secrets = [
         { name = "KC_DB_PASSWORD", valueFrom = var.db_password_arn },
         { name = "KEYCLOAK_ADMIN_PASSWORD", valueFrom = var.admin_password_arn },
         # Terraform client secret
-        { name = "TERRAFORM_CLIENT_SECRET", valueFrom = var.terraform_client_secret_arn }
+        { name = "TERRAFORM_CLIENT_SECRET", valueFrom = var.terraform_client_secret_arn },
+        { name = "KC_SPI_EMAIL_SMTP_USER", valueFrom = "${var.ses_smtp_credentials_secret_arn}:username::" },
+        { name = "KC_SPI_EMAIL_SMTP_PASSWORD", valueFrom = "${var.ses_smtp_credentials_secret_arn}:password::" }
       ]
       logConfiguration = {
         logDriver = "awslogs"

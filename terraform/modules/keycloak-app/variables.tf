@@ -50,3 +50,29 @@ variable "rds_sg_id" {
   description = "RDS security group ID"
   type        = string
 }
+
+# --- SES SMTP Variables ---
+variable "ses_smtp_credentials_secret_arn" {
+  description = "ARN of Secrets Manager secret containing SES SMTP credentials"
+  type        = string
+}
+
+variable "ses_smtp_endpoint" {
+  description = "SES SMTP endpoint"
+  type        = string
+}
+
+variable "ses_smtp_port" {
+  description = "SES SMTP port"
+  type        = number
+}
+
+variable "ses_from_email" {
+  description = "From email address for Keycloak"
+  type        = string
+}
+
+variable "ses_from_display_name" {
+  description = "Display name for from email"
+  type        = string
+}
