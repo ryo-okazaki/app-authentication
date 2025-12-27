@@ -93,6 +93,9 @@ tf-plan-kc-dev:
 tf-apply-kc-dev:
 	terraform -chdir=terraform/environments/development/keycloak apply -var-file=terraform.tfvars
 
+tf-destroy-kc-dev:
+	terraform -chdir=terraform/environments/development/keycloak destroy -var-file=terraform.tfvars
+
 tf-out-kc-dev:
 	terraform -chdir=terraform/environments/development/keycloak output
 
