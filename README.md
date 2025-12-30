@@ -1,4 +1,4 @@
-# app-authentication
+# プロダクト間共通認証基盤
 
 ## 概要
 
