@@ -29,9 +29,9 @@ sequenceDiagram
         Note over Frontend,Backend: API呼び出しフェーズ（各リクエストごと）
         User->>Frontend: 11. データ取得操作
         Frontend->>Backend: 12. GET /api/todos<br/>Authorization: Bearer {token}
-        
+
         Note over Backend: 13. トークン検証（ローカル）<br/>━━━━━━━━━━━━━━━━<br/>a. JWTヘッダー解析<br/>b. 署名検証（キャッシュした公開鍵）<br/>c. issuer検証<br/>d. audience検証<br/>   → "todo-backend-client"が含まれるか<br/>e. 有効期限検証<br/>━━━━━━━━━━━━━━━━
-        
+
         alt トークン有効
             Backend->>Backend: 14. ビジネスロジック実行
             Backend->>Frontend: 15. 200 OK + データ
