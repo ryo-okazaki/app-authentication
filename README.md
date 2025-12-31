@@ -254,6 +254,6 @@ make export-settings-details
 
 ## 関連リポジトリ
 
-- [todo-app-infrastructure](../todo-app-infrastructure): ToDoアプリインフラ（Terraform）
-- [todo-app-next](../todo-app-next): ToDoアプリフロントエンド（Next.js）
-- [todo-app-express](../todo-app-express): ToDoアプリバックエンド（Express）
+- [todo-app-infrastructure](https://github.com/ryo-okazaki/todo-app-infrastructure): ToDoアプリインフラ（Terraform）
+- [todo-app-frontend](https://github.com/ryo-okazaki/todo-app-frontend): ToDoアプリフロントエンド（Next.js）
+- [todo-app-backend](https://github.com/ryo-okazaki/todo-app-backend): ToDoアプリバックエンド（Express）
